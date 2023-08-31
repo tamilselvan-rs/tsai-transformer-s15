@@ -22,6 +22,10 @@ class TranslatorDataModule(lt.LightningDataModule):
         self.__meta[INPUT_LANGUAGE] = {}
         self.__meta[OUTPUT_LANGUAGE] = {}
     
+    def __get_all_sentences(self, ds, lang): 
+        for item in ds: 
+            yield item['translation'][lang]
+
     def __get_or_build_tokenizer(self, config, ds, lang): 
         tokenizer_path = Path(config['tokenizer_file'].format(lang)) 
         if not Path.exists(tokenizer_path): 

@@ -105,7 +105,8 @@ class MultiHeadAttentionBlock(nn.Module):
         attention_scores = (query @ key.transpose(-2, -1)) / math.sqrt(d_k)
         if mask is not None:
             # Write a very low value (indicating -inf) to the positions where mask == 0
-            attention_scores.masked_fill_(mask == 0, -1e9)
+            _MASKING_VALUE = -1e9 if attention_scores.dtype == torch.float32 else -1e+4
+            attention_scores.masked_fill_(mask == 0, _MASKING_VALUE)
         attention_scores = attention_scores.softmax(dim=-1) # (batch, h, seq_len, seq_len) # Apply soft
         if dropout is not None:
             attention_scores = dropout(attention_scores)
@@ -135,7 +136,7 @@ class MultiHeadAttentionBlock(nn.Module):
         return self.w_o(x)
     
 class EncoderBlock(nn.Module):
-    def __init__(self, self_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock, dropout) -> None : #VERIFY
+    def __init__(self, self_attention_block: MultiHeadAttentionBlock, feed_forward_block: FeedForwardBlock,  dropout: float) -> None : 
         super().__init__()
         self.self_attention_block = self_attention_block
         self.feed_forward_block = feed_forward_block
@@ -261,12 +262,3 @@ def build_transformer(src_vocab_size: int, tgt_vocab_size: int, src_seq_len: int
                 nn.init.xavier_uniform_(p)
                 
         return transformer
-                                  
-                                  
-
-    
-    
-
-                             
-                             
-    

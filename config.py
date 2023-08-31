@@ -23,9 +23,9 @@ def get_dst_device():
 
 def get_config():
     return { 
-            "batch_size": 2048, 
+            "batch_size": 6, 
             "num_epochs": 10, 
-            "lr": 10**-4, 
+            "lr": 10**-4,
             "d_model": 512,
             "d_ff": 2048,
             "dropout": 0.1,
@@ -36,7 +36,7 @@ def get_config():
             "lang_out": "it", 
             "model_folder": "weights", 
             "model_basename": "tmodel_", 
-            "preload": True, 
+            "preload": None, 
             "tokenizer_file": "tokenizer_{0}.json", 
             "experiment_name": "runs/tmodel",
             "device": get_dst_device()
