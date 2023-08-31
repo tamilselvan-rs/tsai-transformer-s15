@@ -11,35 +11,6 @@ from torch.utils.tensorboard import SummaryWriter
 import os
 
 class LtTranslatorModel(lt.LightningModule):
-    
-    transformer_modules = {
-        "encoder": Encoder,
-        "encoder_block": EncoderBlock,
-        "decoder": Decoder,
-        "decoder_block": DecoderBlock,
-        "mha_block": MultiHeadAttentionBlock,
-        "input_embeddings": InputEmbeddings,
-        "pse": PositionalEncoding,
-        "ff_block": FeedForwardBlock,
-        "Transformer": Transformer
-    }
-
-    '''
-    src_vocab_size: int, tgt_vocab_size: int, src_seq_len: int, tgt_seq_len: int, d_model: int=512, N: int=6, h: int=8, dropout: float=0.1, d_ff: int=2048
-    ds, tokenizer_src, tokenizer_tgt, src_lang, tgt_lang, seq_len
-    Configurable Params:
-    -------------------
-    1. num_epochs: Number of epochs to train the model
-    2. d_model: Total dimensions to consider for input embeddings
-    3. num_heads: Number of self attention heads
-    4. num_layers: Number of Encoder / Decoder Blocks
-    5. dropout: Regularization value
-    6. d_ff: Expansion Coefficient for First linear layer in FeedForward Module
-    7. lang_src: Source Language
-    8. lang_tgt: Target Language (For Translation)
-    9. lang_dataset: Dataset to be used for Training and Testing
-    10. batch_size: Batch Size of Training & Testing
-    '''
     def __init__(self, config, datamodule: TranslatorDataModule) -> None:
         super().__init__()
         self.config = config
