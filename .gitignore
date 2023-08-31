@@ -4,6 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 runs/
+lightning_logs
+.DS_Store
 
 # C extensions
 *.so

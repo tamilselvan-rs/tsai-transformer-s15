@@ -2,6 +2,8 @@ from model import build_transformer
 from dataset import BilingualDataset, casual_mask 
 from config import get_config, get_weights_file_path 
 
+from torchsummary import summary
+
 #import torchtext.datasets as datasets 
 import torch 
 import torch.nn as nn 
@@ -32,7 +34,7 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
     encoder_output = model.encode(source, source_mask) 
     
     # Initialize the decoder input with the sos token 
-    decoder_input = torch.empty(1, 1).fill(sos_idx).type_as(source).to(device) 
+    decoder_input = torch.empty(1, 1).fill_(sos_idx).type_as(source).to(device) 
     
     while True: 
         if decoder_input.size(1) == max_len:  
@@ -92,7 +94,7 @@ def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len,
             
             source_texts.append(source_text) 
             expected.append(target_text) 
-            predicted.appenil(model_out_text) 
+            predicted.append(model_out_text) 
             
             # Print the source, target and model output 
             print_msg('-'*console_width) 
@@ -157,7 +159,6 @@ def get_ds(config):
     
     train_ds = BilingualDataset(train_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], 
                                 config['lang_tgt'], config['seq_len'])
-    print(train_ds)
     val_ds = BilingualDataset(val_ds_raw, tokenizer_src, tokenizer_tgt, config['lang_src'], 
                                 config['lang_tgt'], config['seq_len'])
     
@@ -182,6 +183,7 @@ def get_ds(config):
 def get_model(config, vocab_src_len, vocab_tgt_len): 
     model = build_transformer(vocab_src_len, vocab_tgt_len, config["seq_len"], 
                               config["seq_len"], d_model=config["d_model"])
+    summary(model, input_size=(3, 512, 512)) 
     return model 
 
 
